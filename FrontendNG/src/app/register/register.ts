@@ -29,11 +29,9 @@ export class Register {
   }
 
   register() {
-    // Simple patterns for validation
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
 
-    // Basic validation before sending to backend
     if (!this.registerInput.firstName || !this.registerInput.lastName || 
         !this.registerInput.email || !this.registerInput.password) {
       this.registerMsg = 'All fields are required.';
@@ -50,7 +48,6 @@ export class Register {
       return;
     }
 
-    // If validation passes, call API
     this.http.post('http://localhost:8080/api/register', this.registerInput).subscribe({
       next: (res) => {
         const result = res as any;
