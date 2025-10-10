@@ -38,10 +38,10 @@ export class Register {
       return;
     }
 
-    if (!emailPattern.test(this.registerInput.email)) {
-      this.registerMsg = 'Invalid email address.';
-      return;
-    }
+    // if (!emailPattern.test(this.registerInput.email)) {
+    //   this.registerMsg = 'Invalid email address.';
+    //   return;
+    // }
 
     if (!passwordPattern.test(this.registerInput.password)) {
       this.registerMsg = 'Weak password. Must include at least 1 uppercase letter, 1 lowercase letter, 1 number, and be 8+ characters long.';
