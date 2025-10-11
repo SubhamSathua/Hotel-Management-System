@@ -37,7 +37,9 @@
             <input [type]="showPassword ? 'text' : 'password'" placeholder="Enter your password" [(ngModel)]="loginInput.password" name="password"
               required #passwordCtrl="ngModel" />
             <button type="button" class="toggle-password" (click)="togglePassword()">
-              {{ showPassword ? '🙈' : '👁' }}
+              <img [src]="showPassword ? 'ico/hidden.png' : 'ico/eye.png'" 
+                   [alt]="showPassword ? 'Hide Password' : 'Show Password'" 
+                   class="password-icon">
             </button>
           </div>
         </div>

@@ -66,11 +66,8 @@ export class Login {
               case 'ADMIN':
                 this.router.navigate(['/adminDashboard']);
                 break;
-              case 'MANAGER':
-                this.router.navigate(['/manager-dashboard']);
-                break;
               case 'RECEPTION':
-                this.router.navigate(['/receptionDashboard']);
+                this.router.navigate(['/listAllBookings']);
                 break;
               case 'CUSTOMER':
                 this.router.navigate(['/customerDashboard']);
