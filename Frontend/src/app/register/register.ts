@@ -11,7 +11,6 @@ import { CommonModule } from '@angular/common';
   templateUrl: './register.html',
   styleUrls: ['./register.css'] 
 })
-
 export class Register {
   registerInput = {
     firstName: '',
@@ -29,25 +28,28 @@ export class Register {
   }
 
   register() {
+    // Simple patterns for validation
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
 
+    // Basic validation before sending to backend
     if (!this.registerInput.firstName || !this.registerInput.lastName || 
         !this.registerInput.email || !this.registerInput.password) {
       this.registerMsg = 'All fields are required.';
       return;
     }
 
-    // if (!emailPattern.test(this.registerInput.email)) {
-    //   this.registerMsg = 'Invalid email address.';
-    //   return;
-    // }
+    if (!emailPattern.test(this.registerInput.email)) {
+      this.registerMsg = 'Invalid email address.';
+      return;
+    }
 
     if (!passwordPattern.test(this.registerInput.password)) {
       this.registerMsg = 'Weak password. Must include at least 1 uppercase letter, 1 lowercase letter, 1 number, and be 8+ characters long.';
       return;
     }
 
+    // If validation passes, call API
     this.http.post('http://localhost:8080/api/register', this.registerInput).subscribe({
       next: (res) => {
         const result = res as any;

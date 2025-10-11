@@ -93,7 +93,7 @@ export class Navbar implements OnInit {
         this.router.navigate(['/adminDashboard']);
         break;
       case 'RECEPTION':
-        this.router.navigate(['/receptionDashboard']);
+        this.router.navigate(['/listAllBookings']);
         break;
       case 'CUSTOMER':
         this.router.navigate(['/customerDashboard']);

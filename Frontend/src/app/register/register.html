@@ -52,7 +52,9 @@
                             [(ngModel)]="registerInput.password" name="password" required
                             pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$" #passwordCtrl="ngModel" />
                         <button type="button" class="toggle-password" (click)="togglePassword()">
-                            {{ showPassword ? '🙈' : '👁' }}
+                            <img [src]="showPassword ? 'ico/hidden.png' : 'ico/eye.png'" 
+                                 [alt]="showPassword ? 'Hide Password' : 'Show Password'" 
+                                 class="password-icon">
                         </button>
                     </div>
 
