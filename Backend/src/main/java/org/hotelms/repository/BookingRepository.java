@@ -15,7 +15,11 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
     @Query("SELECT b FROM Booking b WHERE b.room.id = :roomId")
     List<Booking> findByRoomId(@Param("roomId") Integer roomId);
     
-    
+    // Check for overlapping bookings for the same room
+    @Query("SELECT b FROM Booking b WHERE b.room.id = :roomId " +
+           "AND b.status != 'CANCELLED' " +
+           "AND b.checkinDate < :checkoutDate " +
+           "AND b.checkoutDate > :checkinDate")
     List<Booking> findOverlappingBookings(@Param("roomId") Integer roomId, 
                                         @Param("checkinDate") LocalDate checkinDate, 
                                         @Param("checkoutDate") LocalDate checkoutDate);
