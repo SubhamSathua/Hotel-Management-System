@@ -30,18 +30,4 @@ public class BookingService {
         bookingRepository.deleteById(id);
     }
     
-    public List<Booking> getBookingsByUserId(Integer userId) {
-        return bookingRepository.findByUserId(userId);
-    }
-    
-    // Check if room is available for given dates
-    public boolean isRoomAvailable(Integer roomId, LocalDate checkinDate, LocalDate checkoutDate) {
-        List<Booking> overlappingBookings = bookingRepository.findOverlappingBookings(roomId, checkinDate, checkoutDate);
-        return overlappingBookings.isEmpty(); // Available if no overlapping bookings found
-    }
-    
-    // Get overlapping bookings for debugging/admin purposes
-    public List<Booking> getOverlappingBookings(Integer roomId, LocalDate checkinDate, LocalDate checkoutDate) {
-        return bookingRepository.findOverlappingBookings(roomId, checkinDate, checkoutDate);
-    }
 }
