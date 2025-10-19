@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/rooms")
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 public class RoomController {
-/*
+
     @Autowired
     private RoomService roomService;
 
@@ -28,5 +28,10 @@ public class RoomController {
     public List<Room> getAvailableRooms() {
         return roomService.getAllRooms(); // Since we removed status, return all rooms
     }
- */
+
+    @GetMapping("/{id}")
+    public Map<String, Object> getRoomById(@PathVariable int id) {
+        return roomService.getRoomById(id);
+    }
+
 }
