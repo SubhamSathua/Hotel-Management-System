@@ -17,4 +17,10 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
     // Find rooms with AC
     List<Room> findByAirConditioned(boolean airConditioned);
 
+    // Custom query to find rooms by type and AC
+    @Query("SELECT r FROM Room r WHERE r.roomType = :roomType AND r.airConditioned = :airConditioned")
+    List<Room> findByRoomTypeAndAirConditioned(
+            @Param("roomType") String roomType,
+            @Param("airConditioned") boolean airConditioned
+    );
 }

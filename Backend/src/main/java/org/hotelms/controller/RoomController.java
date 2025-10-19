@@ -34,4 +34,16 @@ public class RoomController {
         return roomService.getRoomById(id);
     }
 
+    @PutMapping("/{id}/update")
+    public Map<String, String> updateRoom(
+            @PathVariable int id,
+            @RequestBody Room room
+    ) {
+        return roomService.updateRoom(id, room);
+    }
+
+    @DeleteMapping("/{room_id}/delete")
+    public Map<String, String> deleteRoom(@PathVariable int room_id) {
+        return roomService.deleteRoom(room_id);
+    }
 }
