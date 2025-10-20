@@ -16,12 +16,8 @@ import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(
-        origins = "http://localhost:4200",
-        allowCredentials = "true",
-        allowedHeaders = "*",
-        methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS}
-)
+@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true", allowedHeaders = "*", methods = {
+        RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS })
 public class BookingController {
 
     @Autowired
@@ -92,10 +88,12 @@ public class BookingController {
             }
 
             // CHECK ROOM AVAILABILITY - PREVENT DOUBLE BOOKING
-            boolean isAvailable = bookingService.isRoomAvailable(roomId, booking.getCheckinDate(), booking.getCheckoutDate());
+            boolean isAvailable = bookingService.isRoomAvailable(roomId, booking.getCheckinDate(),
+                    booking.getCheckoutDate());
             if (!isAvailable) {
                 res.put("status", "error");
-                res.put("message", "❌ Room is already booked for the selected dates. Please choose different dates or another room.");
+                res.put("message",
+                        "❌ Room is already booked for the selected dates. Please choose different dates or another room.");
                 return res;
             }
 
@@ -123,10 +121,10 @@ public class BookingController {
 
         try {
             List<Booking> bookings = bookingService.getAllBookings();
-            
+
             // Convert to simple data structure to avoid lazy loading issues
             List<Map<String, Object>> simpleBookings = new ArrayList<>();
-            
+
             for (Booking booking : bookings) {
                 Map<String, Object> bookingData = new HashMap<>();
                 bookingData.put("id", booking.getId());
@@ -137,7 +135,7 @@ public class BookingController {
                 bookingData.put("totalNumOfGuest", booking.getTotalNumOfGuest());
                 bookingData.put("totalFee", booking.getTotalFee());
                 bookingData.put("status", booking.getStatus());
-                
+
                 // Add room and user IDs without loading full objects
                 if (booking.getRoom() != null) {
                     bookingData.put("roomId", booking.getRoom().getId());
@@ -145,10 +143,10 @@ public class BookingController {
                 if (booking.getUser() != null) {
                     bookingData.put("userId", booking.getUser().getId());
                 }
-                
+
                 simpleBookings.add(bookingData);
             }
-            
+
             res.put("status", "success");
             res.put("message", "Booking history fetched successfully");
             res.put("totalCount", simpleBookings.size());
@@ -168,10 +166,10 @@ public class BookingController {
 
         try {
             List<Booking> bookings = bookingService.getBookingsByUserId(userId);
-            
+
             // Convert to simple data structure to avoid lazy loading issues
             List<Map<String, Object>> simpleBookings = new ArrayList<>();
-            
+
             for (Booking booking : bookings) {
                 Map<String, Object> bookingData = new HashMap<>();
                 bookingData.put("id", booking.getId());
@@ -182,7 +180,7 @@ public class BookingController {
                 bookingData.put("totalNumOfGuest", booking.getTotalNumOfGuest());
                 bookingData.put("totalFee", booking.getTotalFee());
                 bookingData.put("status", booking.getStatus());
-                
+
                 // Add room and user IDs
                 if (booking.getRoom() != null) {
                     bookingData.put("roomId", booking.getRoom().getId());
@@ -190,10 +188,10 @@ public class BookingController {
                 if (booking.getUser() != null) {
                     bookingData.put("userId", booking.getUser().getId());
                 }
-                
+
                 simpleBookings.add(bookingData);
             }
-            
+
             res.put("status", "success");
             res.put("message", "Bookings for user ID " + userId + " fetched successfully");
             res.put("userId", userId);
@@ -222,11 +220,11 @@ public class BookingController {
             }
 
             Booking booking = bookingOpt.get();
-            
+
             // Update booking status to COMPLETED
             booking.setStatus("COMPLETED");
             bookingService.saveBooking(booking);
-            
+
             res.put("status", "success");
             res.put("message", "Booking completed successfully");
             res.put("bookingId", id.toString());
@@ -255,11 +253,11 @@ public class BookingController {
             }
 
             Booking booking = bookingOpt.get();
-            
+
             // Update booking status to CANCELLED
             booking.setStatus("CANCELLED");
             bookingService.saveBooking(booking);
-            
+
             res.put("status", "success");
             res.put("message", "Booking cancelled successfully");
             res.put("bookingId", id.toString());
@@ -282,29 +280,29 @@ public class BookingController {
         try {
             List<Booking> allBookings = bookingService.getAllBookings();
             List<Map<String, Object>> conflicts = new ArrayList<>();
-            
+
             // Check each booking against all other bookings
             for (int i = 0; i < allBookings.size(); i++) {
                 Booking booking1 = allBookings.get(i);
-                
+
                 // Skip cancelled bookings
                 if ("CANCELLED".equals(booking1.getStatus())) {
                     continue;
                 }
-                
+
                 for (int j = i + 1; j < allBookings.size(); j++) {
                     Booking booking2 = allBookings.get(j);
-                    
+
                     // Skip cancelled bookings
                     if ("CANCELLED".equals(booking2.getStatus())) {
                         continue;
                     }
-                    
+
                     // Check if same room and overlapping dates
                     if (booking1.getRoom().getId() == booking2.getRoom().getId() &&
-                        booking1.getCheckinDate().isBefore(booking2.getCheckoutDate()) &&
-                        booking1.getCheckoutDate().isAfter(booking2.getCheckinDate())) {
-                        
+                            booking1.getCheckinDate().isBefore(booking2.getCheckoutDate()) &&
+                            booking1.getCheckoutDate().isAfter(booking2.getCheckinDate())) {
+
                         Map<String, Object> conflict = new HashMap<>();
                         conflict.put("booking1Id", booking1.getId());
                         conflict.put("booking2Id", booking2.getId());
@@ -317,12 +315,12 @@ public class BookingController {
                     }
                 }
             }
-            
+
             res.put("status", "success");
             res.put("message", "Booking conflicts check completed");
             res.put("conflictCount", conflicts.size());
             res.put("conflicts", conflicts);
-            
+
         } catch (Exception e) {
             res.put("status", "error");
             res.put("message", "Failed to check booking conflicts: " + e.getMessage());
@@ -335,30 +333,30 @@ public class BookingController {
     // New endpoint to check room availability
     @GetMapping("/bookings/check-availability")
     public Map<String, Object> checkRoomAvailability(@RequestParam Integer roomId,
-                                                    @RequestParam String checkinDate,
-                                                    @RequestParam String checkoutDate) {
+            @RequestParam String checkinDate,
+            @RequestParam String checkoutDate) {
         Map<String, Object> res = new HashMap<>();
 
         try {
             java.time.LocalDate checkin = java.time.LocalDate.parse(checkinDate);
             java.time.LocalDate checkout = java.time.LocalDate.parse(checkoutDate);
-            
+
             boolean isAvailable = bookingService.isRoomAvailable(roomId, checkin, checkout);
             List<Booking> overlappingBookings = bookingService.getOverlappingBookings(roomId, checkin, checkout);
-            
+
             res.put("status", "success");
             res.put("roomId", roomId);
             res.put("checkinDate", checkinDate);
             res.put("checkoutDate", checkoutDate);
             res.put("isAvailable", isAvailable);
             res.put("overlappingBookingsCount", overlappingBookings.size());
-            
+
             if (!isAvailable) {
                 res.put("message", "Room is not available for the selected dates");
             } else {
                 res.put("message", "Room is available for the selected dates");
             }
-            
+
         } catch (Exception e) {
             res.put("status", "error");
             res.put("message", "Failed to check room availability: " + e.getMessage());
